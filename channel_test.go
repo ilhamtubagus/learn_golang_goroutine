@@ -38,3 +38,24 @@ func TestChannelAsParameter(t *testing.T) {
 
 	time.Sleep(2 * time.Second)
 }
+
+func OnlyIn(channel chan<- string) {
+	time.Sleep(1 * time.Second)
+	channel <- "Hello, World!"
+	fmt.Println("Data sent to channel")
+}
+
+func OnlyOut(channel <-chan string) {
+	data := <-channel
+	fmt.Println(data)
+}
+
+func TestInOutChannelDirection(t *testing.T) {
+	responseChannel := make(chan string)
+	defer close(responseChannel)
+
+	go OnlyIn(responseChannel)
+	OnlyOut(responseChannel)
+
+	time.Sleep(1 * time.Second)
+}
