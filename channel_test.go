@@ -59,3 +59,22 @@ func TestInOutChannelDirection(t *testing.T) {
 
 	time.Sleep(1 * time.Second)
 }
+
+func TestBufferedChannel(t *testing.T) {
+	channel := make(chan string, 1)
+	defer close(channel)
+
+	go func() {
+		channel <- "Hello, World!"
+		channel <- "Another message"
+
+	}()
+
+	go func() {
+		fmt.Println(<-channel)
+		fmt.Println(<-channel)
+	}()
+
+	time.Sleep(2 * time.Second)
+	fmt.Println("Done")
+}
