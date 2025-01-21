@@ -8,6 +8,7 @@ import (
 )
 
 func RunAsynchronous(group *sync.WaitGroup) {
+	// Defer will be invoked at the end of the function regardless of whether the function returns normally or not.
 	defer group.Done()
 
 	group.Add(1)
