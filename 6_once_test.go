@@ -6,6 +6,8 @@ import (
 	"testing"
 )
 
+// sync.Once ensure that only once time function performed, can be used as singleton mechanism
+
 var counter int = 0
 
 func OnlyOnce() {

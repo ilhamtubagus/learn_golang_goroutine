@@ -7,6 +7,9 @@ import (
 	"time"
 )
 
+// sync.Pool can be used to store temporary value that can be used in multiple goroutines
+// Get() will retrieve the value and remove it from the pool, when Get() invoked later, it will create the default value from New()
+
 func TestPool(t *testing.T) {
 	pool := sync.Pool{
 		New: func() interface{} {

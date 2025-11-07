@@ -7,6 +7,10 @@ import (
 	"time"
 )
 
+// Cond implements a condition variable, a rendezvous point
+// for goroutines waiting for or announcing the occurrence
+// of an event.
+
 var locker = sync.Mutex{}
 var cond = sync.NewCond(&locker)
 var group = &sync.WaitGroup{}

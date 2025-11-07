@@ -44,9 +44,11 @@ func TestChangeThreadNumber(t *testing.T) {
 	fmt.Printf("Total CPU cores: %d\n", totalCpu)
 
 	runtime.GOMAXPROCS(20)
+	// Supplying with -1 will return the previous setting of max procs
 	totalThread := runtime.GOMAXPROCS(-1)
 	fmt.Printf("Total Thread: %d\n", totalThread)
 
+	// The result will be 10 + 1 main goroutine + 1 back sweeper/garbage collector go routine
 	totalGoroutine := runtime.NumGoroutine()
 	fmt.Printf("Total Goroutine: %d\n", totalGoroutine)
 

@@ -6,6 +6,8 @@ import (
 	"testing"
 )
 
+// sync.Map is like Map but thread safe when performed in concurrent application
+
 func AddToMap(data *sync.Map, value int, wg *sync.WaitGroup) {
 	defer wg.Done()
 

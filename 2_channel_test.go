@@ -57,7 +57,7 @@ func TestInOutChannelDirection(t *testing.T) {
 	go OnlyIn(responseChannel)
 	OnlyOut(responseChannel)
 
-	time.Sleep(1 * time.Second)
+	//time.Sleep(1 * time.Second)
 }
 
 func TestBufferedChannel(t *testing.T) {
@@ -83,10 +83,10 @@ func TestRangeChannel(t *testing.T) {
 	channel := make(chan string)
 
 	go func() {
+		defer close(channel)
 		for i := 0; i < 5; i++ {
 			channel <- fmt.Sprintf("Message %d", i)
 		}
-		defer close(channel)
 	}()
 
 	for message := range channel {

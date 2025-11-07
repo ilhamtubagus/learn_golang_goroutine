@@ -48,16 +48,21 @@ func (ba *BankAccount) GetBalance() int {
 func TestRWMutexBankAccount(t *testing.T) {
 	account := BankAccount{}
 
+	wg := sync.WaitGroup{}
+
 	for i := 0; i < 100; i++ {
+		wg.Add(1)
 		go func() {
 			for j := 0; j < 100; j++ {
 				account.AddBalance(1)
 				fmt.Println("Balance:", account.GetBalance())
 			}
+			wg.Done()
 		}()
 	}
 
-	time.Sleep(3 * time.Second)
+	wg.Wait()
+	//time.Sleep(3 * time.Second)
 }
 
 type UserBalance struct {
@@ -78,7 +83,7 @@ func (userBalance *UserBalance) Change(amount int) {
 	userBalance.Balance += amount
 }
 
-func Transfer(user1, user2 *UserBalance, amount int) {
+func Transfer(user1, user2 *UserBalance, amount int, wg *sync.WaitGroup) {
 	user1.Lock()
 	fmt.Println("Lock user 1", user1.Name)
 	user1.Change(-amount)
@@ -93,9 +98,11 @@ func Transfer(user1, user2 *UserBalance, amount int) {
 
 	user1.Unlock()
 	user2.Unlock()
+	wg.Done()
 }
 
 func TestDeadlock(t *testing.T) {
+	wg := sync.WaitGroup{}
 	budi := &UserBalance{
 		Name:    "Budi",
 		Balance: 1000000,
@@ -105,10 +112,11 @@ func TestDeadlock(t *testing.T) {
 		Balance: 1000000,
 	}
 
-	go Transfer(budi, fian, 100000)
-	go Transfer(fian, budi, 200000)
+	wg.Add(2)
+	go Transfer(budi, fian, 100000, &wg)
+	go Transfer(fian, budi, 200000, &wg)
 
-	time.Sleep(5 * time.Second)
+	wg.Wait()
 
 	fmt.Println("Budi:", budi.Balance) // Expected: 1100000
 	fmt.Println("Fian:", fian.Balance) // Expected: 900000
